@@ -7,11 +7,20 @@ func Sep() string {
 }
 
 
-func Print(gen []u8, dim_y int, dim_x int) !void {
-    for i in 0..dim_y {
-        for j in 0..dim_y {
-            try io.Printf("{} ", gen[i+j])
+func Print(gen []u8, dim_y uint, dim_x uint, per_bit u64) !void {
+    try io.Printf("x: {} y: {} b: {}\n", dim_x, dim_y, per_bit)
+
+    for i in 0..u64(dim_y){
+        for j in 0..u64(dim_x)  {
+            byte_index := i * dim_x + j
+            index := byte_index / per_bit
+            offset := byte_index % per_bit
+
+            curr := gen[index]
+
+            try io.Printf("{} ", offset >> u64(curr)) 
         }
         try io.Print("\n")
     }
 }
+

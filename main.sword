@@ -4,21 +4,24 @@ import "std/io"
 import "aux"
 
 const G = 10; // Generations
-const DimX = 5
-const DimY = 4
+const DimX = 2
+const DimY = 1
 
-const SizeX = DimX * 8 // size of u8   DimX * (sizeof[u8]() * 8)
-const SizeY = DimY * 8
+const u8 = 8
+const SizeX = DimX * u8 // size of u8   DimX * (sizeof[u8]() * 8)
+const SizeY = DimY * u8
 
-const SizeBuf = DimY * DimX // size of allocated buffer
+const SizeBuf = DimY * DimX * u8 // size of allocated buffer
+const DimBuf = SizeY * SizeX
 
 func Process(mut next_gen mem.Allocator, mut gen []u8) void {
-    aux.Print(gen, DimY, DimX) catch {}
+    aux.Print(gen, SizeY, SizeX, u8) catch {}
 }
 
 func main() !void {
-
-    try io.Printf("{}Board Size:\nsize x: {} ({} u8)\nsize y: {} ({} u8)\nTotal Size: {} ({} u8){}", aux.Sep(), SizeX, DimX, SizeY, DimY, SizeBuf, SizeX * SizeY, aux.Sep())
+    try io.Printf("{}Board Size:\n", aux.Sep())
+    try io.Printf("size x: {} ({} u8)\nsize y: {} ({} u8)\n",  SizeX, DimX, SizeY, DimY)
+    try io.Printf("Total Size: {} ({} u8){}", DimBuf, SizeBuf, aux.Sep())
 
     mut gen_even := [SizeBuf]u8{}
     mut gen_odd := [SizeBuf]u8{}
@@ -26,10 +29,7 @@ func main() !void {
     mut even_arn := mem.NewArena(gen_even[..])
     mut odd_arn := mem.NewArena(gen_odd[..])
 
-
-    /* Test input */
-
-    gen_even[1] = 0b00001000
+    gen_even[1] = 255
 
     for i in 0..G {
         try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())

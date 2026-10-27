@@ -23,3 +23,28 @@
 
     const size_x = DimX * (sizeof[u8]() * 8)
 const size_y = DimY * (sizeof[u8]() * 8)
+
+
+
+
+            for k in 0..per_bit{
+                try io.Printf("{} ", gen[i+j] >> u8(k))
+            }
+            try io.Print("\n")
+
+
+
+
+            ___
+
+                for i in 0..G {
+        try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())
+
+        if i % 2 == 0 {
+            Process(&odd_arn, gen_even[..])
+            even_arn.Reset()
+        } else {
+            Process(&even_arn, gen_odd[..])
+            odd_arn.Reset()
+        }
+    }
