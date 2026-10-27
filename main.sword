@@ -1,0 +1,34 @@
+import "std/mem"
+import "std/io"
+
+import "aux"
+
+const G = 10;
+const DimX = 5
+const DimY = 4
+
+
+func Process[T](gen [DimY][DimX]T, next_gen [DimY][DimX]T) void {
+    try io.Printf("Gen: {} Next Gen: {}", gen, next_gen)
+}
+
+func main() !void {
+
+    size_x := DimX * (sizeof[u8]() * 8)
+    size_y := DimY * (sizeof[u8]() * 8)
+    try io.Printf("{}Board Size:\nsize x: {}\nsize y: {}{}", aux.Sep(), size_x, size_y, aux.Sep())
+
+    mut gen_even := [DimY][DimX]u8{}
+    mut gen_odd := [DimY][DimX]u8{}
+
+    for i in 0..G {
+        try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())
+
+        if i % 2 == 0 {
+            Process(gen_even, gen_odd)
+        } else {
+            Process(gen_odd, gen_even)
+        }
+
+    }
+}

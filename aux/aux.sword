@@ -1,0 +1,6 @@
+package aux
+
+
+func Sep() string {
+    return "\n=================\n"
+}

@@ -1,0 +1,20 @@
+    mut stdin_backing := [arn_size]u8{}
+    mut stdin_arn := mem.NewArena(stdin_backing[..])
+
+    input := try fs.ReadStdin(&stdin_arn, 1)
+
+    for string(input) != "\n" {
+        input := try fs.ReadStdin(&stdin_arn, 1)
+
+        if % arn_size
+    }
+
+
+
+    ---
+
+
+            try io.Printf("=================\n {}th Generation Ends \n=================\n\n", i)
+
+                size_x := DimX * (sizeof[u8]() * 8)
+    size_y := DimY * (sizeof[u8]() * 8)
