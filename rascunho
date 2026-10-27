@@ -18,3 +18,8 @@
 
                 size_x := DimX * (sizeof[u8]() * 8)
     size_y := DimY * (sizeof[u8]() * 8)
+
+
+
+    const size_x = DimX * (sizeof[u8]() * 8)
+const size_y = DimY * (sizeof[u8]() * 8)

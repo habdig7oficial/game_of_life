@@ -3,32 +3,43 @@ import "std/io"
 
 import "aux"
 
-const G = 10;
+const G = 10; // Generations
 const DimX = 5
 const DimY = 4
 
+const SizeX = DimX * 8 // size of u8   DimX * (sizeof[u8]() * 8)
+const SizeY = DimY * 8
 
-func Process[T](gen [DimY][DimX]T, next_gen [DimY][DimX]T) void {
-    try io.Printf("Gen: {} Next Gen: {}", gen, next_gen)
+const SizeBuf = DimY * DimX // size of allocated buffer
+
+func Process(mut next_gen mem.Allocator, mut gen []u8) void {
+    aux.Print(gen, DimY, DimX) catch {}
 }
 
 func main() !void {
 
-    size_x := DimX * (sizeof[u8]() * 8)
-    size_y := DimY * (sizeof[u8]() * 8)
-    try io.Printf("{}Board Size:\nsize x: {}\nsize y: {}{}", aux.Sep(), size_x, size_y, aux.Sep())
+    try io.Printf("{}Board Size:\nsize x: {} ({} u8)\nsize y: {} ({} u8)\nTotal Size: {} ({} u8){}", aux.Sep(), SizeX, DimX, SizeY, DimY, SizeBuf, SizeX * SizeY, aux.Sep())
 
-    mut gen_even := [DimY][DimX]u8{}
-    mut gen_odd := [DimY][DimX]u8{}
+    mut gen_even := [SizeBuf]u8{}
+    mut gen_odd := [SizeBuf]u8{}
+
+    mut even_arn := mem.NewArena(gen_even[..])
+    mut odd_arn := mem.NewArena(gen_odd[..])
+
+
+    /* Test input */
+
+    gen_even[1] = 0b00001000
 
     for i in 0..G {
         try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())
 
         if i % 2 == 0 {
-            Process(gen_even, gen_odd)
+            Process(&odd_arn, gen_even[..])
+            even_arn.Reset()
         } else {
-            Process(gen_odd, gen_even)
+            Process(&even_arn, gen_odd[..])
+            odd_arn.Reset()
         }
-
     }
 }
