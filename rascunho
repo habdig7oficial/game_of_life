@@ -48,3 +48,11 @@ const size_y = DimY * (sizeof[u8]() * 8)
             odd_arn.Reset()
         }
     }
+
+
+
+        scope {
+        for cols, block in gen.chunks(1) { // calc the ideal value later
+            spawn lib.Next(block, SizeX, cols)
+        }
+    }

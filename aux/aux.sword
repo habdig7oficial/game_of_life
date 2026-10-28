@@ -1,6 +1,8 @@
 package aux
 
 import "std/io"
+import "std/os"
+import "std/strings"
 
 func Sep() string {
     return "\n=================\n"
@@ -18,9 +20,23 @@ func Print(gen []u8, dim_y uint, dim_x uint, per_bit u64) !void {
 
             curr := gen[index]
 
-            try io.Printf("{} ", offset >> u64(curr)) 
+            is_alive := (curr & (1 << u8(offset))) > 0
+
+            if is_alive {
+                try io.Print("1 ")
+            } else {
+                try io.Print("0 ")
+            }
         }
         try io.Print("\n")
     }
 }
+
+
+/* Sword does not implement yet a threads function substitute it when it does, for now run the env.sh */
+func Threads() u64 {
+    var_threads := os.EnvOr("THREADS", "1")
+    return strings.ParseU64(var_threads) catch 1
+}
+
 

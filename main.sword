@@ -2,6 +2,7 @@ import "std/mem"
 import "std/io"
 
 import "aux"
+import "lib"
 
 const G = 10; // Generations
 const DimX = 2
@@ -14,8 +15,15 @@ const SizeY = DimY * u8
 const SizeBuf = DimY * DimX * u8 // size of allocated buffer
 const DimBuf = SizeY * SizeX
 
-func Process(mut next_gen mem.Allocator, mut gen []u8) void {
+func Process(mut next_gen mem.Allocator, mut gen []u8) !void {
     aux.Print(gen, SizeY, SizeX, u8) catch {}
+
+    th := aux.Threads() 
+
+    lib.Next(gen, next_gen, SizeY, SizeX, u8) catch {}
+
+    io.Printf("{} ", SizeBuf) catch {}
+    io.Printf("{}\n", th) catch {}
 }
 
 func main() !void {
@@ -29,16 +37,19 @@ func main() !void {
     mut even_arn := mem.NewArena(gen_even[..])
     mut odd_arn := mem.NewArena(gen_odd[..])
 
-    gen_even[1] = 255
+    // basic oscilator remove later
+    gen_even[2] = 8
+    gen_even[4] = 8
+    gen_even[6] = 8
 
     for i in 0..G {
         try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())
 
         if i % 2 == 0 {
-            Process(&odd_arn, gen_even[..])
+            try Process(&odd_arn, gen_even[..])
             even_arn.Reset()
         } else {
-            Process(&even_arn, gen_odd[..])
+            try Process(&even_arn, gen_odd[..])
             odd_arn.Reset()
         }
     }

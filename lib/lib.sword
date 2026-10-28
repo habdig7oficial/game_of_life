@@ -1,0 +1,35 @@
+import "std/io"
+import "std/mem"
+
+// y is the start of the row
+func Next(gen []u8, mut next_gen []u8, dim_y uint, dim_x uint, per_bit u64) !void {
+    try io.Printf("x: {} y: {} b: {}\n", dim_x, dim_y, per_bit)
+
+    mut next_gen := mem.Alloc[u8](next_gen_arn, 100) orelse return error.OutOfMemory
+
+    for i in 0..next_gen.len {
+        next_gen[i] = 255
+
+        try io.Printf("{} ", next_gen[i])
+    } 
+    try io.Print("\n")
+
+    for i in 0..u64(dim_y){
+        for j in 0..u64(dim_x)  {
+            byte_index := i * dim_x + j
+            index := byte_index / per_bit
+            offset := byte_index % per_bit
+
+            curr := gen[index]
+
+            is_alive := (curr & (1 << u8(offset))) > 0
+
+            if is_alive {
+                try io.Print("1 ")
+            } else {
+                try io.Print("0 ")
+            }
+        }
+        try io.Print("\n")
+    }
+}
