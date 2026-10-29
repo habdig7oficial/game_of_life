@@ -1,18 +1,22 @@
 import "std/io"
 import "std/mem"
 
+
+struct Cords {
+    up u8
+    down u8
+    left u8
+    right u8 
+
+    up_left u8
+    up_right u8
+    down_left u8 
+    down_right u8
+}
+
 // y is the start of the row
 func Next(gen []u8, mut next_gen []u8, dim_y uint, dim_x uint, per_bit u64) !void {
     try io.Printf("x: {} y: {} b: {}\n", dim_x, dim_y, per_bit)
-
-    mut next_gen := mem.Alloc[u8](next_gen_arn, 100) orelse return error.OutOfMemory
-
-    for i in 0..next_gen.len {
-        next_gen[i] = 255
-
-        try io.Printf("{} ", next_gen[i])
-    } 
-    try io.Print("\n")
 
     for i in 0..u64(dim_y){
         for j in 0..u64(dim_x)  {
@@ -20,16 +24,50 @@ func Next(gen []u8, mut next_gen []u8, dim_y uint, dim_x uint, per_bit u64) !voi
             index := byte_index / per_bit
             offset := byte_index % per_bit
 
-            curr := gen[index]
+            
 
-            is_alive := (curr & (1 << u8(offset))) > 0
-
-            if is_alive {
-                try io.Print("1 ")
-            } else {
-                try io.Print("0 ")
+            coords := Cords{
+                left: gen[index] >> 1
+                right: gen[index] << 1
+                up: 0
+                down: 0
+                up_left: 0
+                up_right: 0
+                down_left: 0 
+                down_right: 0
             }
+
+            //is_alive := (curr & (1 << u8(offset)))
+
+           try printBinary(gen[index])
+           try io.Print(" ")
+           try printBinary(coords.left)
+           try io.Print(" ")
+           try printBinary(coords.right)
+           try io.Print("\n")
         }
         try io.Print("\n")
     }
+}
+
+
+
+
+//helper prin bin function
+
+func printBinary(v u8) !void { // Print each bit starting from the most significant bit
+    mut started := false 
+    for idx in 0..8 { 
+        shift := 8 - idx 
+        bit := (v >> u8(shift)) & 1 
+        if bit == 1 { 
+            started = true 
+        } 
+        if started { 
+            try io.Printf("{}", bit) 
+        } 
+    } 
+    if !started { 
+        try io.Print("0") 
+    } 
 }

@@ -15,7 +15,7 @@ const SizeY = DimY * u8
 const SizeBuf = DimY * DimX * u8 // size of allocated buffer
 const DimBuf = SizeY * SizeX
 
-func Process(mut next_gen mem.Allocator, mut gen []u8) !void {
+func Process(mut next_gen []u8, mut gen []u8) !void {
     aux.Print(gen, SizeY, SizeX, u8) catch {}
 
     th := aux.Threads() 
@@ -35,22 +35,26 @@ func main() !void {
     mut gen_odd := [SizeBuf]u8{}
 
     mut even_arn := mem.NewArena(gen_even[..])
-    mut odd_arn := mem.NewArena(gen_odd[..])
+    //mut odd_arn := mem.NewArena(gen_odd[..])
 
     // basic oscilator remove later
     gen_even[2] = 8
     gen_even[4] = 8
     gen_even[6] = 8
 
+    gen_even[7] = 100
+    gen_even[9] = 100
+
     for i in 0..G {
         try io.Printf("{} {}th Generation Begins {}", aux.Sep(), i, aux.Sep())
 
         if i % 2 == 0 {
-            try Process(&odd_arn, gen_even[..])
-            even_arn.Reset()
+            try Process(gen_odd[..], gen_even[..])
+            //even_arn.Reset()
         } else {
-            try Process(&even_arn, gen_odd[..])
-            odd_arn.Reset()
+            try Process(gen_even[..], gen_odd[..])
+            //odd_arn.Reset()
         }
+        break
     }
 }
